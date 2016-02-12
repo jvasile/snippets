@@ -1,0 +1,31 @@
+// This is a json doc, with the exception that it can handle comments
+// By default, the script looks in ~/.config/jamesvasile.com/fetch_gcal for this file.
+{
+		// Keys are the tags we will use in the calendar to show you which calendar holds these items.
+		// Values are the private urls that yield ics data for your various calendars.
+		"calendars":{
+				"jv":"https://www.google.com/calendar/ical/jvasile%40gmail.com/private-LOTSAHEX/basic.ics"
+				,"ejmjlv":"https://www.google.com/calendar/ical/ejmjlv%40gmail.com/private-LOTSAHEX/basic.ics"
+				,"ots_g":"https://calendar.google.com/calendar/ical/james%40opentechstrategies.com/private-LOTSAHEX/basic.ics"
+		},
+
+		// Path to the directory where we will put generated org files?
+		// ~ will be expanded
+		"org dir":"/home/james/Documents/org-mode",
+
+		// This prefix will be prepended to each org-mode file we generate. Defaults to "gcal_"
+		"prefix":"gcal_",
+
+    // Path to a directory where we will put ical files
+		// ~ will be expanded
+    "ics dir":"/home/james/Documents/org-mode/ics",
+
+		// Path to the program to use in converting from ical to org mode
+		// ~ will be expanded
+		"ical2org":"/home/james/bin/ical2org.awk"
+
+}
+// Tell Emacs we're a json file:
+// Local Variables:
+// mode: json
+// End:
