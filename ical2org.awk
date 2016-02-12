@@ -80,10 +80,10 @@ BEGIN {
     trimdots = 1;
 
     # change this to your name
-    author = "Eric S Fraga"
+    author = "James Vasile"
 
     # and to your email address
-    emailaddress = "e.fraga@ucl.ac.uk"
+    emailaddress = "james@jamesvasile.com"
 
     ### end config section
 
@@ -101,7 +101,7 @@ BEGIN {
         print "#+AUTHOR:     ", author
         print "#+EMAIL:      ", emailaddress
         print "#+DESCRIPTION: converted using the ical2org awk script"
-        print "#+CATEGORY:    google"
+        print "#+CATEGORY:   ", category
         print "#+STARTUP:     hidestars"
         print "#+STARTUP:     overview"
         print ""
@@ -257,19 +257,46 @@ BEGIN {
     #output event
     if(max_age<0 || ( lasttimestamp>0 && systime()<lasttimestamp+max_age_seconds ) )
     {
-        # build org timestamp
-        if (intfreq != "")
-            date = date intfreq
-        if (time2 != "")
-            date = date ">--<" time2
-        else if (rrend != "")
-            date = date ">--<" rrend
+
+				if (intfreq) {
+						split(date, a, " ")
+						dow["Sun"] = 0
+						dow["Mon"] = 1
+						dow["Tue"] = 2
+						dow["Wed"] = 3
+						dow["Thu"] = 4
+						dow["Fri"] = 5
+						dow["Sat"] = 6
+						time = a[3]
+
+						split(a[1], s, "-")
+						split(rrend, e, "-")
+						split(e[3], m, " ")
+						e[3] = m[1]
+						if (e[2] == "")
+								e[2] = s[2]
+						if (e[3] == "")
+								e[3] = s[3]
+						if (e[1] == "")
+								e[1] = s[1]
+						date = "%%(and (= " dow[a[2]] " (calendar-day-of-week date)) (diary-block " s[2] " " s[3] " " s[1] " " e[2] " " e[3] " " e[1] ")))"
+				} else {
+						time = ""
+
+						# build org timestamp
+						if (intfreq != "")
+								date = date intfreq
+						if (time2 != "")
+								date = date ">--<" time2
+						else if (rrend != "")
+								date = date ">--<" rrend
+				}
 
         # translate \n sequences to actual newlines and unprotect commas (,)
         if (condense)
             print "* <" date "> " gensub("^[ ]+", "", "", gensub("\\\\,", ",", "g", gensub("\\\\n", " ", "g", summary)))
         else
-            print "* " gensub("^[ ]+", "", "", gensub("\\\\,", ",", "g", gensub("\\\\n", " ", "g", summary))) "\n<" date ">"
+            print "* " time " " gensub("^[ ]+", "", "", gensub("\\\\,", ",", "g", gensub("\\\\n", " ", "g", summary))) "\n<" date ">"
         print ":PROPERTIES:"
         print     ":ID:       " id
         if(length(location))
