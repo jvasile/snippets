@@ -51,7 +51,9 @@ def make_logger(name, level):
     logger.addHandler(ch)
     return logger
 
-
+def randpass(size=12, chars=string.letters + string.digits):
+    import random
+    return ''.join(random.choice(chars) for l in range(size))
 
 def slurp(fname, split=False):
     with open(fname) as INF:
@@ -59,10 +61,6 @@ def slurp(fname, split=False):
         if not split:
             return data
     return data.split("\n")
-
-def randpass(size=12, chars=string.letters + string.digits):
-    import random
-    return ''.join(random.choice(chars) for l in range(size))
 
 def str2list(s):
     return [s] if isinstance(s, basestring) else s
