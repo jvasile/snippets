@@ -1,5 +1,29 @@
 #!/usr/bin/env python
 
+"""Paginate is a tool for adding headers and footers to PDFs.  I
+mostly use it to add page numbers.  I recently used it to add
+"Appendix" notices to the bottom of some PDFs I was attaching to a
+larger doc.  
+
+To get page numbers, put \thepage somewhere in a header or footer:
+
+    paginate input_file output_file --rfoot "\thepage" --lfoot "\ital{Appendix A: Misunderstood Organs}" 
+
+As part of a workflow for packaging existing docs, it goes well with
+pdftk and ghostscript.  You might, for example, burst a pdf into
+single pages, join them with gs into a cover/title page/toc and the
+rest of the doc, paginate the latter, then join with gs to reassemble
+the whole.  I have some python wrappers for such things that make life
+easier.  I'll add those to this repo at some point.
+
+If you need the footer to show up against a dark background, you can put it in a white box:
+
+     \colorbox{white}{\thepage}
+
+Copyright 2015 James Vasile <james@jamesvasile.com>
+Distributed under the terms of the Affero GNU General Public License, version 3 or later
+"""
+
 # System dependencies
 import os
 import sys
@@ -20,7 +44,7 @@ class Paginate():
         'landscape':False,
     }
 
-    """Class to take a PDF and add page numbers to it."""
+    """Class to take a PDF and add headers and footers to it."""
     def __init__(self, **kwargs):
         """Pass in defaults for all the other functions."""
         self.defaults = dict(self.defaults.items() + kwargs.items())
