@@ -55,7 +55,6 @@ class Paginate():
             self.defaults['rfoot'] = r"\thepage"
 
     def latex(self, pdf_fname, **kwargs):
-        pdf_fname = pdf_fname.replace(" ", "\\space ")
         opts = dict(self.defaults.items() + kwargs.items())
         opts['pdf_fname'] = pdf_fname
         opts['landscape'] = "true" if opts['landscape'] else "false"
@@ -86,25 +85,24 @@ class Paginate():
 
     def paginate(self, out_fname, in_fname, **kwargs):
         """Set kwargs['clean'] = True to cause deletion of aux, log and out files."""
-        if not 'clean' in kwargs:
-            kwargs['clean'] = True
-
         c = PDF()
         with u.TemporaryDirectory() as td:
             lname =  os.path.join(td, os.path.basename(c.replace_ext(out_fname, ".tex")))
+
+            # Handle space in name of source pdf
+            if " " in in_fname:
+                shutil.copy(in_fname, os.path.join(td, "temp.pdf"))
+                in_fname = os.path.join(td, "temp.pdf")
+
             with open(lname, 'w') as OUTF:
                 OUTF.write(self.latex(in_fname, **kwargs))
-            c.pdflatex(c.replace_ext(out_fname, ""), lname)
-        if kwargs['clean']:    
-            os.system("rm -f "+c.replace_ext(out_fname, ".aux"))
-            os.system("rm -f "+c.replace_ext(out_fname, ".log"))
-            os.system("rm -f "+c.replace_ext(out_fname, ".out"))
+            c.pdflatex(c.replace_ext(out_fname, ""), lname, clean=kwargs.get('clean', True))
 
 
 def main():
     import argparse
     parser = argparse.ArgumentParser(description='Add headers and footers to a PDF.',
-                                     epilog="Hints: Putting \\thepage in footers will print the page number on each page. Footers and headers sometimes look nice wrapped in \ital{}.")
+                                     epilog=r"Hints: Putting \thepage in footers will print the page number on each page. Footers and headers sometimes look nice wrapped in \ital{}.")
     parser.add_argument("input", help="The PDF in need of headers and footers.")
     parser.add_argument("output", help="The filename to write to.")
     parser.add_argument('--lhead', action='store', help='left header text', default="")
