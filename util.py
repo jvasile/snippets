@@ -10,9 +10,13 @@ from __future__ import print_function
 
 import os
 import string
+import subprocess
 import sys
 
 import util as u # yeah, this is weird but REASONS
+
+def call(cmd):
+    return subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE).communicate()
 
 def err(msg):
     if not msg.endswith("\n"):
