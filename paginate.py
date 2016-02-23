@@ -75,7 +75,7 @@ class Paginate():
 \chead{{\vspace{{4mm}} {chead}}}
 \rhead{{\vspace{{4mm}} {rhead}}}
 \lfoot{{{lfoot}}}
-\cfoot{{{lfoot}}}
+\cfoot{{{cfoot}}}
 \rfoot{{{rfoot}}}
 
 \includepdf[landscape={landscape}, pages=-, offset=0 0, pagecommand={{\thispagestyle{{fancy}}}}]{{{pdf_fname}}}
